@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.Calendar;
 
@@ -17,6 +18,7 @@ import java.util.Calendar;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ProfileDTO {
     @EqualsAndHashCode.Include

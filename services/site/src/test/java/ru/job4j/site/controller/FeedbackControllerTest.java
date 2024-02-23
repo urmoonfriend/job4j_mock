@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.job4j.site.domain.Breadcrumb;
 import ru.job4j.site.dto.FeedbackDTO;
 import ru.job4j.site.dto.InterviewDTO;
+import ru.job4j.site.dto.ProfileDTO;
 import ru.job4j.site.service.FeedbackService;
 import ru.job4j.site.service.InterviewService;
 
@@ -46,7 +47,7 @@ class FeedbackControllerTest {
 
     @Test
     void whenGetFeedbackFormThenReturnFeedbackPage() throws Exception {
-        var interviewDTO = new InterviewDTO(1, 1, 2, 2,
+        var interviewDTO = new InterviewDTO(1, 1, 2, 2, new ProfileDTO().setUsername("user1"),
                 "title", "additional", "contactBy",
                 null, null, 0);
         var token = "1234";
