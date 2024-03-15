@@ -1,6 +1,9 @@
 package ru.job4j.site.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.job4j.site.domain.StatusWisher;
 import ru.job4j.site.dto.*;
 
@@ -8,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -17,9 +19,14 @@ import static org.mockito.Mockito.when;
  * @author Dmitry Stepanov
  * @version 21.10.2023 23:28
  */
+@SpringBootTest
 class InterviewServiceTest {
-    private ProfilesService profilesService = mock(ProfilesService.class);
-    private InterviewService interviewService = new InterviewService(profilesService);
+    @Autowired
+    private InterviewService interviewService;
+    @Autowired
+    private RestAuthCall restAuthCall;
+    @MockBean
+    private ProfilesService profilesService;
 
     @Test
     void injectedNotNull() {

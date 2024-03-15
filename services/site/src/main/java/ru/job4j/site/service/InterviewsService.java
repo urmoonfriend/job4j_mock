@@ -17,11 +17,12 @@ import java.util.List;
 public class InterviewsService {
 
     private final ProfilesService profilesService;
+    private final RestAuthCall restAuthCall;
 
     public Page<InterviewDTO> getAll(String token, int page, int size)
             throws JsonProcessingException {
-        var text = new RestAuthCall(String
-                .format("http://localhost:9912/interviews/?page=%d&?size=%d", page, size))
+        var text = restAuthCall.setUrl(String
+                        .format("http://localhost:9912/interviews/?page=%d&?size=%d", page, size))
                 .get(token);
         var mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -31,7 +32,7 @@ public class InterviewsService {
     }
 
     public List<InterviewDTO> getByType(int type) throws JsonProcessingException {
-        var text = new RestAuthCall(String.format("http://localhost:9912/interviews/%d", type))
+        var text = restAuthCall.setUrl(String.format("http://localhost:9912/interviews/%d", type))
                 .get();
         var mapper = new ObjectMapper();
         List<InterviewDTO> interviews = mapper.readValue(text, new TypeReference<>() {
@@ -44,10 +45,9 @@ public class InterviewsService {
 
     public Page<InterviewDTO> getByTopicId(int topicId, int page, int size)
             throws JsonProcessingException {
-        var text =
-                new RestAuthCall(String
-                        .format("http://localhost:9912/interviews/findByTopicId/%d?page=%d&?size=%d",
-                                topicId, page, size)).get();
+        var text = restAuthCall.setUrl(String
+                .format("http://localhost:9912/interviews/findByTopicId/%d?page=%d&?size=%d",
+                        topicId, page, size)).get();
         var mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         var pageType = mapper.getTypeFactory()
@@ -60,7 +60,7 @@ public class InterviewsService {
         var tids = parseIdsListToString(topicIds);
         var mapper = new ObjectMapper();
         var text =
-                new RestAuthCall(String
+                restAuthCall.setUrl(String
                         .format("http://localhost:9912/interviews/findByTopicsIds/%s?page=%d&?size=%d",
                                 tids, page, size)).get();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
