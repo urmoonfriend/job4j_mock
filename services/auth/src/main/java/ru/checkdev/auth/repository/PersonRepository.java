@@ -11,12 +11,15 @@ import ru.checkdev.auth.domain.Photo;
 import ru.checkdev.auth.dto.ProfileDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author parsentev
  * @since 25.09.2016
  */
 public interface PersonRepository extends CrudRepository<Profile, Integer> {
+
+    Optional<Profile> findByEmailAndPassword(String email, String password);
 
     Profile findByEmail(String email);
 

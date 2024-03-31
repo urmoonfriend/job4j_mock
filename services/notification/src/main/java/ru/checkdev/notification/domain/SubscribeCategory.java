@@ -3,6 +3,7 @@ package ru.checkdev.notification.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "cd_subscribe_category")
+@Accessors(chain = true)
 public class SubscribeCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

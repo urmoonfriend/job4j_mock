@@ -1,5 +1,8 @@
 package ru.checkdev.notification.telegram.action;
 
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -13,12 +16,12 @@ import java.util.List;
  * @author Dmitry Stepanov, user Dmitry
  * @since 12.09.2023
  */
+@Service("/start")
+@Data
+@RequiredArgsConstructor
 public class InfoAction implements Action {
-    private final List<String> actions;
-
-    public InfoAction(List<String> actions) {
-        this.actions = actions;
-    }
+    private final List<String> actions = List.of(
+            "/start", "/new", "/check", "/forget", "/subscribe", "/unsubscribe");
 
     @Override
     public BotApiMethod<Message> handle(Message message) {

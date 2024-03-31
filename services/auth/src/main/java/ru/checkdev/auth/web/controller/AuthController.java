@@ -71,7 +71,7 @@ public class AuthController {
         if (result.isPresent()) {
             return new Object() {
                 public String getOk() {
-                    return "ok";
+                    return result.get().getPassword();
                 }
             };
         } else {

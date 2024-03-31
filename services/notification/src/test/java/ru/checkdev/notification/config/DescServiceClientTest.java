@@ -1,4 +1,4 @@
-package ru.checkdev.notification.telegram.service;
+package ru.checkdev.notification.config;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import ru.checkdev.notification.client.DescServiceClient;
+import ru.checkdev.notification.client.TgAuthCallWebClint;
 import ru.checkdev.notification.domain.PersonDTO;
 
 import java.util.Calendar;
@@ -23,8 +25,8 @@ import static org.mockito.Mockito.when;
  * @since 06.10.2023
  */
 @ExtendWith(MockitoExtension.class)
-class TgAuthCallWebClintTest {
-    private static final String URL = "http://tetsurl:15000";
+class DescServiceClientTest {
+    private static final String URL = "http://tetsurl:15001";
     @Mock
     private WebClient webClientMock;
     @Mock
@@ -38,14 +40,13 @@ class TgAuthCallWebClintTest {
     @Mock
     private WebClient.ResponseSpec responseMock;
 
-    private TgAuthCallWebClint tgAuthCallWebClint;
+    private DescServiceClient descServiceClient;
 
     @BeforeEach
     void setUp() {
-        tgAuthCallWebClint = new TgAuthCallWebClint(URL);
-        tgAuthCallWebClint.setWebClient(webClientMock);
+        descServiceClient = new DescServiceClient(URL);
+        descServiceClient.setWebClient(webClientMock);
     }
-
 
     @Test
     void whenDoGetThenReturnPersonDTO() {
@@ -60,7 +61,7 @@ class TgAuthCallWebClintTest {
         when(requestHeadersUriMock.uri("/person/" + personId)).thenReturn(requestHeadersMock);
         when(requestHeadersMock.retrieve()).thenReturn(responseMock);
         when(responseMock.bodyToMono(PersonDTO.class)).thenReturn(Mono.just(personDto));
-        PersonDTO actual = tgAuthCallWebClint.doGet("/person/" + personId).block();
+        PersonDTO actual = (PersonDTO) descServiceClient.doGet("/person/" + personId).block();
         assertThat(actual).isEqualTo(personDto);
     }
 
@@ -71,7 +72,7 @@ class TgAuthCallWebClintTest {
         when(requestHeadersUriMock.uri("/person/" + personId)).thenReturn(requestHeadersMock);
         when(requestHeadersMock.retrieve()).thenReturn(responseMock);
         when(responseMock.bodyToMono(PersonDTO.class)).thenReturn(Mono.error(new Throwable("Error")));
-        assertThatThrownBy(() -> tgAuthCallWebClint.doGet("/person/" + personId).block())
+        assertThatThrownBy(() -> descServiceClient.doGet("/person/" + personId).block())
                 .isInstanceOf(Throwable.class)
                 .hasMessageContaining("Error");
     }
@@ -89,7 +90,7 @@ class TgAuthCallWebClintTest {
         when(requestBodyMock.bodyValue(personDto)).thenReturn(requestHeadersMock);
         when(requestHeadersMock.retrieve()).thenReturn(responseMock);
         when(responseMock.bodyToMono(Object.class)).thenReturn(Mono.just(personDto));
-        Mono<Object> objectMono = tgAuthCallWebClint.doPost("/person/created", personDto);
+        Mono<Object> objectMono = descServiceClient.doPost("/person/created", personDto);
         PersonDTO actual = (PersonDTO) objectMono.block();
         assertThat(actual).isEqualTo(personDto);
     }

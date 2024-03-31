@@ -17,13 +17,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.checkdev.auth.domain.Notify;
-import ru.checkdev.auth.domain.Profile;
 import ru.checkdev.auth.domain.Photo;
+import ru.checkdev.auth.domain.Profile;
 import ru.checkdev.auth.domain.Role;
 import ru.checkdev.auth.repository.PersonRepository;
 
@@ -47,6 +48,7 @@ public class PersonService {
     private final PasswordEncoder encoding = new BCryptPasswordEncoder();
     private final PersonRepository persons;
     private final Messenger msg;
+    private final StandardPasswordEncoder passwordEncoder = new StandardPasswordEncoder();
 
     @Autowired
     public PersonService(final PersonRepository persons, final Messenger msg) {
@@ -107,6 +109,24 @@ public class PersonService {
         return result;
     }
 
+    public Optional<Profile> findByEmailAndPassword(Profile profileRequest) {
+        Optional<Profile> result = Optional.empty();
+        Profile profile = this.persons.findByEmail(profileRequest.getEmail());
+        log.info("findByEmailAndPassword method response: [{}]", profile);
+        if (profile != null) {
+            log.info("profile found, password: {}", profile.getPassword());
+            var passwordsMatches = encoding.matches(profileRequest.getPassword(), profile.getPassword());
+            log.info("encoded password: {}", passwordsMatches);
+            if (passwordsMatches) {
+                log.info("password equals");
+                result = Optional.of(profile);
+            }
+        } else {
+            log.info("profile not found");
+        }
+        return result;
+    }
+
     public List<Profile> getAll() {
         return Lists.newArrayList(persons.findAll());
     }
@@ -135,6 +155,7 @@ public class PersonService {
         } else {
             String password = RandomStringUtils.randomAlphabetic(8);
             find.setPassword(this.encoding.encode(password));
+            profile.setPassword(password);
             this.persons.save(find);
             Map<String, Object> keys = new HashMap<>();
             keys.put("password", password);

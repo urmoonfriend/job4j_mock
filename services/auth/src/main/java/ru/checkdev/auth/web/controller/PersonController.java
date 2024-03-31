@@ -1,5 +1,6 @@
 package ru.checkdev.auth.web.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -27,6 +28,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/person")
+@Slf4j
 public class PersonController {
     private final StandardPasswordEncoder encoding = new StandardPasswordEncoder();
     private final PersonService persons;
@@ -40,6 +42,7 @@ public class PersonController {
 
     @GetMapping("/current")
     public Profile getCurrent(Principal user) {
+        log.info("User: [{}]", user);
         return this.persons.findByEmail(user.getName()).get();
     }
 
@@ -73,6 +76,22 @@ public class PersonController {
     @GetMapping("/profile")
     public Profile loadProfile(@RequestParam String key) throws ServletException {
         return this.persons.findByKey(key);
+    }
+
+    @GetMapping("/by/email")
+    public ResponseEntity<Profile> getByEmail(@RequestParam String email) throws ServletException {
+        var personOpt = persons.findByEmail(email);
+        log.info("personOpt = [{}]", personOpt);
+        return personOpt.map(ResponseEntity::ok)
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/exists")
+    public ResponseEntity<Profile> getByEmailAndPassword(@RequestBody Profile profile) throws ServletException {
+        var personOpt = persons.findByEmailAndPassword(profile);
+        log.info("personOpt = [{}]", personOpt);
+        return personOpt.map(ResponseEntity::ok)
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
