@@ -29,12 +29,12 @@ public class TgAuthCallWebClint {
      * @param url URL http
      * @return Mono<Person>
      */
-    public Mono<PersonDTO> doGet(String url) {
+    public Mono<Object> doGet(String url) {
         return webClient
                 .get()
                 .uri(url)
                 .retrieve()
-                .bodyToMono(PersonDTO.class)
+                .bodyToMono(Object.class)
                 .doOnError(err -> log.error("API not found: {}", err.getMessage()));
     }
 

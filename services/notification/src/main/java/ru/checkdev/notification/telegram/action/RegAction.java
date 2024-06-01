@@ -1,7 +1,9 @@
 package ru.checkdev.notification.telegram.action;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -18,14 +20,16 @@ import java.util.Calendar;
  * @author Dmitry Stepanov, user Dmitry
  * @since 12.09.2023
  */
-@AllArgsConstructor
+@Service("/new")
+@RequiredArgsConstructor
 @Slf4j
 public class RegAction implements Action {
     private static final String ERROR_OBJECT = "error";
     private static final String URL_AUTH_REGISTRATION = "/registration";
     private final TgConfig tgConfig = new TgConfig("tg/", 8);
     private final TgAuthCallWebClint authCallWebClint;
-    private final String urlSiteAuth;
+    @Value("${server.site.url.login}")
+    private String urlSiteAuth;
 
     @Override
     public BotApiMethod<Message> handle(Message message) {

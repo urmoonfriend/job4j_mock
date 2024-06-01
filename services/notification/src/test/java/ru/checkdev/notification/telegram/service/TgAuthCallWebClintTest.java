@@ -60,7 +60,7 @@ class TgAuthCallWebClintTest {
         when(requestHeadersUriMock.uri("/person/" + personId)).thenReturn(requestHeadersMock);
         when(requestHeadersMock.retrieve()).thenReturn(responseMock);
         when(responseMock.bodyToMono(PersonDTO.class)).thenReturn(Mono.just(personDto));
-        PersonDTO actual = tgAuthCallWebClint.doGet("/person/" + personId).block();
+        PersonDTO actual = (PersonDTO) tgAuthCallWebClint.doGet("/person/" + personId).block();
         assertThat(actual).isEqualTo(personDto);
     }
 

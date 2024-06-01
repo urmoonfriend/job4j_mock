@@ -29,6 +29,7 @@ public class SecurityConfig {
                 "/registration",
                 "/forgot",
                 "/auth/activated/**",
+                "/person/check",
                 "/person/by",
                 "/person/random",
                 "/person/resume/**",

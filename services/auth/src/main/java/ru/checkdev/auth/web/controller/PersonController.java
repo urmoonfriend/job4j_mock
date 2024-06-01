@@ -11,6 +11,9 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.checkdev.auth.domain.Profile;
+import ru.checkdev.auth.dto.CheckInfoDto;
+import ru.checkdev.auth.dto.ProfileDTO;
+import ru.checkdev.auth.dto.ResultMessage;
 import ru.checkdev.auth.service.PersonService;
 import ru.checkdev.auth.service.RoleService;
 
@@ -146,5 +149,19 @@ public class PersonController {
         map.put("personsShowed", persons.findByShow(true, PageRequest.of(pageToShow, limit)));
         map.put("getTotal", persons.showed());
         return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @PostMapping("/check")
+    public ResponseEntity<?> getProfile(@RequestParam String email) {
+        Optional<Profile> profileOptional = persons.findByEmail(email);
+        if (profileOptional.isPresent()) {
+            Profile profile = profileOptional.get();
+            CheckInfoDto profileDTO = new CheckInfoDto()
+                    .setUsername(profile.getUsername())
+                    .setEmail(profile.getEmail());
+            return ResponseEntity.ok(profileDTO);
+        } else {
+            return ResponseEntity.badRequest().body(ResultMessage.error("Profile not found"));
+        }
     }
 }
