@@ -1,5 +1,6 @@
 package ru.checkdev.auth.web.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,6 +31,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/person")
+@Slf4j
 public class PersonController {
     private final StandardPasswordEncoder encoding = new StandardPasswordEncoder();
     private final PersonService persons;
@@ -151,8 +153,9 @@ public class PersonController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @PostMapping("/check")
-    public ResponseEntity<?> getProfile(@RequestParam String email) {
+    @GetMapping("/check/{email}")
+    public ResponseEntity<?> getProfile(@PathVariable String email) {
+        log.info("getProfile method request: {}", email);
         Optional<Profile> profileOptional = persons.findByEmail(email);
         if (profileOptional.isPresent()) {
             Profile profile = profileOptional.get();

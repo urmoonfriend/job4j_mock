@@ -60,7 +60,7 @@ class TgAuthCallWebClintTest {
         when(requestHeadersUriMock.uri("/person/" + personId)).thenReturn(requestHeadersMock);
         when(requestHeadersMock.retrieve()).thenReturn(responseMock);
         when(responseMock.bodyToMono(PersonDTO.class)).thenReturn(Mono.just(personDto));
-        PersonDTO actual = (PersonDTO) tgAuthCallWebClint.doGet("/person/" + personId).block();
+        PersonDTO actual = tgAuthCallWebClint.doGet("/person/" + personId, PersonDTO.class).block();
         assertThat(actual).isEqualTo(personDto);
     }
 
@@ -71,7 +71,7 @@ class TgAuthCallWebClintTest {
         when(requestHeadersUriMock.uri("/person/" + personId)).thenReturn(requestHeadersMock);
         when(requestHeadersMock.retrieve()).thenReturn(responseMock);
         when(responseMock.bodyToMono(PersonDTO.class)).thenReturn(Mono.error(new Throwable("Error")));
-        assertThatThrownBy(() -> tgAuthCallWebClint.doGet("/person/" + personId).block())
+        assertThatThrownBy(() -> tgAuthCallWebClint.doGet("/person/" + personId, PersonDTO.class).block())
                 .isInstanceOf(Throwable.class)
                 .hasMessageContaining("Error");
     }

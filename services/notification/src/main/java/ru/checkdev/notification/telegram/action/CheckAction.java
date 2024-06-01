@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.checkdev.notification.domain.CheckInfoDto;
 import ru.checkdev.notification.domain.PersonDTO;
 import ru.checkdev.notification.telegram.config.TgConfig;
 import ru.checkdev.notification.telegram.service.TgAuthCallWebClint;
@@ -17,7 +18,7 @@ import ru.checkdev.notification.telegram.service.TgAuthCallWebClint;
 public class CheckAction implements Action {
     private final TgAuthCallWebClint tgAuthCallWebClint;
     private final TgConfig tgConfig = new TgConfig("tg/", 8);
-    private static final String URL_GET_PROFILE = "/person/check";
+    private static final String URL_GET_PROFILE = "/person/check/%s";
     private static final String ERROR_OBJECT = "error";
 
     @Override
@@ -40,9 +41,9 @@ public class CheckAction implements Action {
                     + "/new";
             return new SendMessage(chatId, text);
         }
-        Object result;
+        CheckInfoDto result;
         try {
-            result = tgAuthCallWebClint.doPost(URL_GET_PROFILE, new PersonDTO()).block();
+            result = tgAuthCallWebClint.doGet(String.format(URL_GET_PROFILE, email), CheckInfoDto.class).block();
         } catch (Exception e) {
             log.error("WebClient doGet error: {}", e.getMessage());
             text = "Сервис не доступен попробуйте позже" + sl

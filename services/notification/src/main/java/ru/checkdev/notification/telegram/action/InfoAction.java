@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Service("/start")
 public class InfoAction implements Action {
-    private static final List<String> actions = List.of(
+    private static final List<String> ACTIONS = List.of(
             "/start", "/new", "/check", "/forget", "/subscribe", "/unsubscribe");
 
     @Override
@@ -25,7 +25,7 @@ public class InfoAction implements Action {
         String sl = System.lineSeparator();
         var out = new StringBuilder();
         out.append("Выберите действие:").append(sl);
-        for (String action : actions) {
+        for (String action : ACTIONS) {
             out.append(action).append(sl);
         }
         return new SendMessage(chatId, out.toString());

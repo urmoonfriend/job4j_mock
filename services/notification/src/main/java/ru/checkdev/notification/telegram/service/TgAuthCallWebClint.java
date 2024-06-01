@@ -1,5 +1,6 @@
 package ru.checkdev.notification.telegram.service;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import ru.checkdev.notification.domain.PersonDTO;
  * @author Dmitry Stepanov, user Dmitry
  * @since 12.09.2023
  */
+@Setter
 @Service
 @Slf4j
 public class TgAuthCallWebClint {
@@ -29,12 +31,12 @@ public class TgAuthCallWebClint {
      * @param url URL http
      * @return Mono<Person>
      */
-    public Mono<Object> doGet(String url) {
+    public <T> Mono<T> doGet(String url, Class<T> responseType) {
         return webClient
                 .get()
                 .uri(url)
                 .retrieve()
-                .bodyToMono(Object.class)
+                .bodyToMono(responseType)
                 .doOnError(err -> log.error("API not found: {}", err.getMessage()));
     }
 
@@ -55,7 +57,4 @@ public class TgAuthCallWebClint {
                 .doOnError(err -> log.error("API not found: {}", err.getMessage()));
     }
 
-    public void setWebClient(WebClient webClient) {
-        this.webClient = webClient;
-    }
 }
