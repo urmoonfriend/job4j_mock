@@ -47,7 +47,7 @@ public class UserInfoAction implements Action {
     }
 
     private String getTextFromAuth(String email, String sl) {
-        String text = "";
+        String text = "Сервис не доступен попробуйте позже";
         try {
             Object result = authCallWebClint.doGet(String.format("%s?email=%s", URL_AUTH_PERSON_INFO, email)).block();
             var mapObject = tgConfig.getObjectToMap(result);

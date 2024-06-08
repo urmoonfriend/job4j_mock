@@ -18,7 +18,7 @@ import javax.persistence.Id;
 public class SubscribeCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private int userId;
-    private int categoryId;
+    private Integer id;
+    private Integer userId;
+    private Integer categoryId;
 }
