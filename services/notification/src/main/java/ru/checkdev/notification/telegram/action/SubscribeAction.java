@@ -84,7 +84,7 @@ public class SubscribeAction implements Action {
         return text;
     }
 
-    private String getTextFromCategories() {
+    protected String getTextFromCategories() {
         StringBuilder text = new StringBuilder();
         text.append(String.format("%-5s | %-10s %s", "category_id", "category_name", SL));
         categoryService.getCategories().forEach(

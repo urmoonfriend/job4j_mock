@@ -2,6 +2,7 @@ package ru.checkdev.notification.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Calendar;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * @since 25.09.2016
  */
 @Data
-@AllArgsConstructor
+@Accessors(chain = true)
 public class PersonDTO {
     private String email;
     private String password;

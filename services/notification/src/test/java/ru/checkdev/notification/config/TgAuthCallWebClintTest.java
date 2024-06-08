@@ -56,11 +56,15 @@ class TgAuthCallWebClintTest {
                 .set(Calendar.MONTH, Calendar.OCTOBER)
                 .set(Calendar.YEAR, 2023)
                 .build();
-        var personDto = new PersonDTO("mail", "password", true, Collections.EMPTY_LIST, created);
+        var personDto = new PersonDTO().setEmail("email@gmail.com")
+                .setPassword("password")
+                .setPrivacy(true)
+                .setRoles(null)
+                .setCreated(Calendar.getInstance());
         when(webClientMock.get()).thenReturn(requestHeadersUriMock);
         when(requestHeadersUriMock.uri("/person/" + personId)).thenReturn(requestHeadersMock);
         when(requestHeadersMock.retrieve()).thenReturn(responseMock);
-        when(responseMock.bodyToMono(PersonDTO.class)).thenReturn(Mono.just(personDto));
+        when(responseMock.bodyToMono(Object.class)).thenReturn(Mono.just(personDto));
         PersonDTO actual = (PersonDTO) tgAuthCallWebClint.doGet("/person/" + personId).block();
         assertThat(actual).isEqualTo(personDto);
     }
@@ -84,7 +88,11 @@ class TgAuthCallWebClintTest {
                 .set(Calendar.MONTH, Calendar.OCTOBER)
                 .set(Calendar.YEAR, 2023)
                 .build();
-        var personDto = new PersonDTO("mail", "password", true, null, created);
+        var personDto = new PersonDTO().setEmail("email@gmail.com")
+                .setPassword("password")
+                .setPrivacy(true)
+                .setRoles(null)
+                .setCreated(Calendar.getInstance());
         when(webClientMock.post()).thenReturn(requestBodyUriMock);
         when(requestBodyUriMock.uri("/person/created")).thenReturn(requestBodyMock);
         when(requestBodyMock.bodyValue(personDto)).thenReturn(requestHeadersMock);

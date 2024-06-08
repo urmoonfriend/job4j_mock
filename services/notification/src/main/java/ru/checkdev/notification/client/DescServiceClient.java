@@ -1,5 +1,6 @@
 package ru.checkdev.notification.client;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,12 +11,9 @@ import ru.checkdev.notification.domain.dto.CategoryDto;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class DescServiceClient {
-    private WebClient webClient;
-
-    public DescServiceClient(@Value("${server.desc}") String urlAuth) {
-        this.webClient = WebClient.create(urlAuth);
-    }
+    private final WebClient webClient;
 
     /**
      * Метод get
@@ -58,7 +56,4 @@ public class DescServiceClient {
                 .doOnError(err -> log.error("API not found: {}", err.getMessage()));
     }
 
-    public void setWebClient(WebClient webClient) {
-        this.webClient = webClient;
-    }
 }
