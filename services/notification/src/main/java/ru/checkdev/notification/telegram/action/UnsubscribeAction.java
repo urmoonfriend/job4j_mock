@@ -66,11 +66,14 @@ public class UnsubscribeAction implements Action {
             if (categoryService.categoryExists(parts[0])) {
                 if (mapObject.containsKey(ID)) {
                     Object stringUserId = mapObject.get(ID);
-                    subscribeCategoryService.delete(
-                            new SubscribeCategory()
-                                    .setCategoryId(Integer.parseInt(parts[0]))
-                                    .setUserId((Integer) stringUserId));
-                    text = String.format("email: %s успешно отписан от категорию: %s",
+                    Integer userId = Integer.valueOf(stringUserId.toString());
+                    Integer categoryId = Integer.valueOf(parts[0]);
+                    log.info("categoryId: {}, userId: {}", categoryId, userId);
+                    var subscribeCategory = new SubscribeCategory()
+                            .setCategoryId(categoryId)
+                            .setUserId((userId));
+                    subscribeCategoryService.delete(subscribeCategory);
+                    text = String.format("email: %s успешно отписан от категории: %s",
                             profileDto.getEmail(), parts[0]);
                 } else {
                     text = "Профиль не найден";

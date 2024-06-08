@@ -66,10 +66,13 @@ public class SubscribeAction implements Action {
             if (categoryService.categoryExists(parts[0])) {
                 if (mapObject.containsKey(ID)) {
                     Object stringUserId = mapObject.get(ID);
-                    subscribeCategoryService.save(
-                            new SubscribeCategory()
-                                    .setCategoryId(Integer.parseInt(parts[0]))
-                                    .setUserId((Integer) stringUserId));
+                    Integer categoryId = Integer.valueOf(parts[0]);
+                    Integer userId = Integer.valueOf(stringUserId.toString());
+                    log.info("categoryId: {}, stringUserId: {}", categoryId, stringUserId);
+                    var subscribeCategory = new SubscribeCategory()
+                            .setCategoryId(categoryId)
+                            .setUserId((userId));
+                    subscribeCategoryService.save(subscribeCategory);
                     text = String.format("email: %s успешно подписан на категорию: %s",
                             profileDto.getEmail(), parts[0]);
                 } else {

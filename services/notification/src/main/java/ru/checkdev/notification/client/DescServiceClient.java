@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import ru.checkdev.notification.domain.PersonDTO;
 import ru.checkdev.notification.domain.dto.CategoryDto;
 
 @Service
@@ -21,12 +22,12 @@ public class DescServiceClient {
      * @param url URL http
      * @return Mono<Person>
      */
-    public Mono<Object> doGet(String url) {
+    public <T> Mono<T> doGet(String url, Class<T> clazz) {
         return webClient
                 .get()
                 .uri(url)
                 .retrieve()
-                .bodyToMono(Object.class)
+                .bodyToMono(clazz)
                 .doOnError(err -> log.error("API not found: {}", err.getMessage()));
     }
 
