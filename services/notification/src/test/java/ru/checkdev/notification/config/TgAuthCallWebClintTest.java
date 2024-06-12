@@ -51,11 +51,6 @@ class TgAuthCallWebClintTest {
     @Test
     void whenDoGetThenReturnPersonDTO() {
         Integer personId = 100;
-        var created = new Calendar.Builder()
-                .set(Calendar.DAY_OF_MONTH, 23)
-                .set(Calendar.MONTH, Calendar.OCTOBER)
-                .set(Calendar.YEAR, 2023)
-                .build();
         var personDto = new PersonDTO().setEmail("email@gmail.com")
                 .setPassword("password")
                 .setPrivacy(true)
@@ -83,11 +78,6 @@ class TgAuthCallWebClintTest {
 
     @Test
     void whenDoPostSavePersonThenReturnNewPerson() {
-        var created = new Calendar.Builder()
-                .set(Calendar.DAY_OF_MONTH, 23)
-                .set(Calendar.MONTH, Calendar.OCTOBER)
-                .set(Calendar.YEAR, 2023)
-                .build();
         var personDto = new PersonDTO().setEmail("email@gmail.com")
                 .setPassword("password")
                 .setPrivacy(true)

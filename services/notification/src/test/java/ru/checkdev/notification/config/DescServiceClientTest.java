@@ -25,7 +25,6 @@ import static org.mockito.Mockito.when;
  * @since 06.10.2023
  */
 @SpringBootTest
-@Slf4j
 class DescServiceClientTest {
     private static final String URL = "http://tetsurl:15001";
     @MockBean
@@ -58,8 +57,6 @@ class DescServiceClientTest {
 
         String testUrl = "http://test.url";
         PersonDTO actual = descServiceClient.doGet(testUrl, PersonDTO.class).block();
-
-        log.info("actual: {}", actual);
         assertThat(actual).isEqualTo(personDto);
     }
 

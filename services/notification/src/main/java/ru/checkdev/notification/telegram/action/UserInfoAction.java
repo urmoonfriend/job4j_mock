@@ -51,7 +51,6 @@ public class UserInfoAction implements Action {
         try {
             Object result = authCallWebClint.doGet(String.format("%s?email=%s", URL_AUTH_PERSON_INFO, email)).block();
             var mapObject = tgConfig.getObjectToMap(result);
-            log.info("result: [{}]", result);
             if (mapObject.containsKey(ERROR_OBJECT)) {
                 text = "Ошибка получения данных: " + mapObject.get(ERROR_OBJECT);
             } else {

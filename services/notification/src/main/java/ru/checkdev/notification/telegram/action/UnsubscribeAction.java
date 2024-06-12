@@ -68,7 +68,6 @@ public class UnsubscribeAction implements Action {
                     Object stringUserId = mapObject.get(ID);
                     Integer userId = Integer.valueOf(stringUserId.toString());
                     Integer categoryId = Integer.valueOf(parts[0]);
-                    log.info("categoryId: {}, userId: {}", categoryId, userId);
                     var subscribeCategory = new SubscribeCategory()
                             .setCategoryId(categoryId)
                             .setUserId((userId));

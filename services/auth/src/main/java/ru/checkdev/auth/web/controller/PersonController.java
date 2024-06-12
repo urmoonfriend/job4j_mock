@@ -42,7 +42,6 @@ public class PersonController {
 
     @GetMapping("/current")
     public Profile getCurrent(Principal user) {
-        log.info("User: [{}]", user);
         return this.persons.findByEmail(user.getName()).get();
     }
 
@@ -81,7 +80,6 @@ public class PersonController {
     @GetMapping("/by/email")
     public ResponseEntity<Profile> getByEmail(@RequestParam String email) throws ServletException {
         var personOpt = persons.findByEmail(email);
-        log.info("personOpt = [{}]", personOpt);
         return personOpt.map(ResponseEntity::ok)
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -89,7 +87,6 @@ public class PersonController {
     @PostMapping("/exists")
     public ResponseEntity<Profile> getByEmailAndPassword(@RequestBody Profile profile) throws ServletException {
         var personOpt = persons.findByEmailAndPassword(profile);
-        log.info("personOpt = [{}]", personOpt);
         return personOpt.map(ResponseEntity::ok)
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

@@ -68,7 +68,6 @@ public class SubscribeAction implements Action {
                     Object stringUserId = mapObject.get(ID);
                     Integer categoryId = Integer.valueOf(parts[0]);
                     Integer userId = Integer.valueOf(stringUserId.toString());
-                    log.info("categoryId: {}, stringUserId: {}", categoryId, stringUserId);
                     var subscribeCategory = new SubscribeCategory()
                             .setCategoryId(categoryId)
                             .setUserId((userId));

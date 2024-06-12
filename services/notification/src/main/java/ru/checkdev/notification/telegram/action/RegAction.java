@@ -22,7 +22,6 @@ import java.util.Calendar;
  */
 @Service("/new")
 @RequiredArgsConstructor
-@Slf4j
 public class RegAction implements Action {
     private static final String ERROR_OBJECT = "error";
     private static final String URL_AUTH_REGISTRATION = "/registration";
@@ -75,7 +74,6 @@ public class RegAction implements Action {
         try {
             result = authCallWebClint.doPost(URL_AUTH_REGISTRATION, person).block();
         } catch (Exception e) {
-            log.error("WebClient doPost error: {}", e.getMessage());
             text = "Сервис не доступен попробуйте позже" + sl
                    + "/start";
             return new SendMessage(chatId, text);

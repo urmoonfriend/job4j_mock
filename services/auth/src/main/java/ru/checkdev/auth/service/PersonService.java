@@ -112,17 +112,11 @@ public class PersonService {
     public Optional<Profile> findByEmailAndPassword(Profile profileRequest) {
         Optional<Profile> result = Optional.empty();
         Profile profile = this.persons.findByEmail(profileRequest.getEmail());
-        log.info("findByEmailAndPassword method response: [{}]", profile);
         if (profile != null) {
-            log.info("profile found, password: {}", profile.getPassword());
             var passwordsMatches = encoding.matches(profileRequest.getPassword(), profile.getPassword());
-            log.info("encoded password: {}", passwordsMatches);
             if (passwordsMatches) {
-                log.info("password equals");
                 result = Optional.of(profile);
             }
-        } else {
-            log.info("profile not found");
         }
         return result;
     }

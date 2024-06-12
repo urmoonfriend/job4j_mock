@@ -37,7 +37,6 @@ public class CategoryService {
         try {
             Object result = descServiceClient.doGet(String.format(URL_DESC_CATEGORY, id), Object.class).block();
             var mapObject = tgConfig.getObjectToMap(result);
-            log.info("category: [{}]", result);
             if (mapObject.containsKey(ID)) {
                 exists = true;
             }

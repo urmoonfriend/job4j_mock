@@ -20,8 +20,6 @@ public class PasswordRecoveryAction implements Action {
     private static final String URL_FORGET = "/forgot";
     private final TgConfig tgConfig = new TgConfig("tg/", 8);
     private final TgAuthCallWebClint authCallWebClint;
-    @Value("${server.site.url.login}")
-    private String urlSiteAuth;
     @Override
     public BotApiMethod<Message> handle(Message message) {
         var chatId = message.getChatId().toString();
@@ -50,7 +48,6 @@ public class PasswordRecoveryAction implements Action {
         try {
             Object result = authCallWebClint.doPost(URL_FORGET, new ProfileDto().setEmail(email)).block();
             var mapObject = tgConfig.getObjectToMap(result);
-            log.info("result: [{}]", result);
             if (mapObject.containsKey(ERROR_OBJECT)) {
                 text = "Ошибка смены пароля: " + mapObject.get(ERROR_OBJECT);
             } else {
