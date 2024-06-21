@@ -1,7 +1,12 @@
 package ru.checkdev.notification.telegram;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.checkdev.notification.telegram.action.Action;
@@ -16,18 +21,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Dmitry Stepanov, user Dmitry
  * @since 12.09.2023
  */
+@Component
+@RequiredArgsConstructor
 public class BotMenu extends TelegramLongPollingBot {
     private final Map<String, String> bindingBy = new ConcurrentHashMap<>();
-    private final Map<String, Action> actions;
-    private final String username;
-    private final String token;
+    @Autowired
+    private Map<String, Action> actions;
+    @Value("${tg.username}")
+    private String username;
+    @Value("${tg.token}")
+    private String token;
 
-
-    public BotMenu(Map<String, Action> actions, String username, String token) throws TelegramApiException {
-        this.actions = actions;
-        this.username = username;
-        this.token = token;
-    }
 
     @Override
     public String getBotUsername() {
@@ -49,9 +53,8 @@ public class BotMenu extends TelegramLongPollingBot {
                 bindingBy.put(chatId, key);
                 send(msg);
             } else if (bindingBy.containsKey(chatId)) {
-                var msg = actions.get(bindingBy.get(chatId)).callback(update.getMessage());
+                actions.get(bindingBy.get(chatId)).callback(update.getMessage()).ifPresent(this::send);
                 bindingBy.remove(chatId);
-                send(msg);
             }
         }
     }
@@ -62,5 +65,9 @@ public class BotMenu extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+    public void send(String chatId, String message) {
+        send(new SendMessage(chatId, message));
     }
 }

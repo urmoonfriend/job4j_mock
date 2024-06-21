@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.checkdev.notification.NtfSrv;
-import ru.checkdev.notification.domain.SubscribeTopic;
+import ru.checkdev.notification.domain.http.SubscribeTopic;
 import ru.checkdev.notification.telegram.TgRun;
 import ru.checkdev.notification.telegram.service.TgAuthCallWebClint;
 import ru.checkdev.notification.web.TemplateController;

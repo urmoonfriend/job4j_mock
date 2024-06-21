@@ -1,15 +1,17 @@
 package ru.checkdev.notification.telegram.action;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.checkdev.notification.domain.PersonDTO;
+import ru.checkdev.notification.domain.kafka.AuthPersonDto;
+import ru.checkdev.notification.domain.kafka.KafkaMessageDto;
+import ru.checkdev.notification.streams.StreamTransmitter;
 import ru.checkdev.notification.telegram.config.TgConfig;
-import ru.checkdev.notification.telegram.service.TgAuthCallWebClint;
 
-import java.util.Calendar;
+import java.util.Optional;
 
 /**
  * 3. Мидл
@@ -18,14 +20,12 @@ import java.util.Calendar;
  * @author Dmitry Stepanov, user Dmitry
  * @since 12.09.2023
  */
-@AllArgsConstructor
+@Service("/new")
+@RequiredArgsConstructor
 @Slf4j
 public class RegAction implements Action {
-    private static final String ERROR_OBJECT = "error";
-    private static final String URL_AUTH_REGISTRATION = "/registration";
     private final TgConfig tgConfig = new TgConfig("tg/", 8);
-    private final TgAuthCallWebClint authCallWebClint;
-    private final String urlSiteAuth;
+    private final StreamTransmitter streamTransmitter;
 
     @Override
     public BotApiMethod<Message> handle(Message message) {
@@ -47,7 +47,7 @@ public class RegAction implements Action {
      * @return BotApiMethod<Message>
      */
     @Override
-    public BotApiMethod<Message> callback(Message message) {
+    public Optional<BotApiMethod<Message>> callback(Message message) {
         var chatId = message.getChatId().toString();
         var email = message.getText();
         var text = "";
@@ -55,35 +55,26 @@ public class RegAction implements Action {
 
         if (!tgConfig.isEmail(email)) {
             text = "Email: " + email + " не корректный." + sl
-                   + "попробуйте снова." + sl
-                   + "/new";
-            return new SendMessage(chatId, text);
+                    + "попробуйте снова." + sl
+                    + "/new";
+            return Optional.of(new SendMessage(chatId, text));
         }
-
         var password = tgConfig.getPassword();
-        var person = new PersonDTO(email, password, true, null,
-                Calendar.getInstance());
-        Object result;
         try {
-            result = authCallWebClint.doPost(URL_AUTH_REGISTRATION, person).block();
+            streamTransmitter.send(new KafkaMessageDto<>(
+                    "auth-1",
+                    new AuthPersonDto()
+                    .setEmail(email)
+                    .setPassword(password)
+                    .setPrivacy(true)
+                    .setRoles(null)
+                    .setChatId(chatId)));
         } catch (Exception e) {
             log.error("WebClient doPost error: {}", e.getMessage());
             text = "Сервис не доступен попробуйте позже" + sl
-                   + "/start";
-            return new SendMessage(chatId, text);
+                    + "/start";
+            return Optional.of(new SendMessage(chatId, text));
         }
-
-        var mapObject = tgConfig.getObjectToMap(result);
-
-        if (mapObject.containsKey(ERROR_OBJECT)) {
-            text = "Ошибка регистрации: " + mapObject.get(ERROR_OBJECT);
-            return new SendMessage(chatId, text);
-        }
-
-        text = "Вы зарегистрированы: " + sl
-               + "Логин: " + email + sl
-               + "Пароль: " + password + sl
-               + urlSiteAuth;
-        return new SendMessage(chatId, text);
+        return Optional.empty();
     }
 }

@@ -2,7 +2,7 @@ package ru.checkdev.notification.web;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.checkdev.notification.domain.Setting;
+import ru.checkdev.notification.domain.http.Setting;
 import ru.checkdev.notification.service.SettingService;
 
 import java.util.List;

@@ -5,7 +5,7 @@ import net.sargue.mailgun.Mail;
 import net.sargue.mailgun.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.checkdev.notification.domain.Setting;
+import ru.checkdev.notification.domain.http.Setting;
 
 import java.util.List;
 import java.util.Map;

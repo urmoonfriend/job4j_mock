@@ -2,7 +2,7 @@ package ru.checkdev.notification.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.checkdev.notification.domain.Notify;
+import ru.checkdev.notification.domain.http.Notify;
 
 import javax.annotation.PreDestroy;
 import java.util.concurrent.Executors;

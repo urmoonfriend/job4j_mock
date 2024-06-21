@@ -4,7 +4,7 @@
 package ru.checkdev.notification.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import ru.checkdev.notification.domain.Setting;
+import ru.checkdev.notification.domain.http.Setting;
 
 /**
  * @author olegbelov

@@ -2,7 +2,7 @@ package ru.checkdev.notification.config;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import ru.checkdev.notification.domain.Setting;
+import ru.checkdev.notification.domain.http.Setting;
 
 import java.util.ArrayList;
 import java.util.List;

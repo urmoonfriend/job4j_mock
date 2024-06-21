@@ -2,7 +2,7 @@ package ru.checkdev.notification.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.checkdev.notification.domain.SubscribeCategory;
+import ru.checkdev.notification.domain.http.SubscribeCategory;
 import ru.checkdev.notification.repository.SubscribeCategoryRepository;
 
 import java.util.ArrayList;

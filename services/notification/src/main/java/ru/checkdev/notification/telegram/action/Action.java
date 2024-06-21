@@ -3,6 +3,8 @@ package ru.checkdev.notification.telegram.action;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.util.Optional;
+
 /**
  * 3. Мидл
  *
@@ -12,5 +14,5 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public interface Action {
     BotApiMethod<Message> handle(Message message);
 
-    BotApiMethod<Message> callback(Message message);
+    Optional<BotApiMethod<Message>> callback(Message message);
 }

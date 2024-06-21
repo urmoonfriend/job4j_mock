@@ -3,7 +3,7 @@ package ru.checkdev.notification.service;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.checkdev.notification.domain.Setting;
+import ru.checkdev.notification.domain.http.Setting;
 import ru.checkdev.notification.repository.SettingRepository;
 
 import java.util.List;

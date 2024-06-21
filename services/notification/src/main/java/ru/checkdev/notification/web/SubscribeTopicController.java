@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.checkdev.notification.domain.SubscribeTopic;
+import ru.checkdev.notification.domain.http.SubscribeTopic;
 import ru.checkdev.notification.service.SubscribeTopicService;
 import java.util.List;
 
