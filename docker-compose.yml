@@ -1,0 +1,135 @@
+version: "3.8"
+services:
+  auth_service:
+    image: auth_service:0.0.1
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    environment:
+      - SERVER_PORT=9900
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://auth_service_db:5432/cd_auth
+    container_name: auth_service
+    ports:
+      - "9900:9900"
+    depends_on:
+      - auth_service_db
+  auth_service_db:
+    image: postgres:14.7-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    container_name: auth_service_db
+    volumes:
+      - ./services/auth/infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - auth-db-data:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
+    restart: unless-stopped
+
+  desc_service:
+    image: desc_service:0.0.1
+    build:
+      context: ./services/desc
+      dockerfile: Dockerfile
+    environment:
+      - SERVER_PORT=9902
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://desc_service_db:5432/cd_desc
+    container_name: desc_service
+    ports:
+      - "9902:9902"
+    depends_on:
+      - desc_service_db
+  desc_service_db:
+    image: postgres:14.7-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    container_name: desc_service_db
+    volumes:
+      - ./services/desc/infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - desc-db-data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    restart: unless-stopped
+
+  mock_service:
+    image: mock_service:0.0.1
+    build:
+      context: ./services/mock
+      dockerfile: Dockerfile
+    environment:
+      - SERVER_PORT=9912
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://mock_service_db:5432/mock
+    container_name: mock_service
+    ports:
+      - "9912:9912"
+    depends_on:
+      - mock_service_db
+  mock_service_db:
+    image: postgres:14.7-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    container_name: mock_service_db
+    volumes:
+      - ./services/mock/infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - mock-db-data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    restart: unless-stopped
+
+  notification_service:
+    image: notification_service:0.0.1
+    build:
+      context: ./services/notification
+      dockerfile: Dockerfile
+    environment:
+      - SERVER_PORT=9920
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://notification_service_db:5432/cd_notification
+    container_name: notification_service
+    ports:
+      - "9920:9920"
+    depends_on:
+      - notification_service_db
+  notification_service_db:
+    image: postgres:14.7-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    container_name: notification_service_db
+    volumes:
+      - ./services/notification/infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - notification-db-data:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+    restart: unless-stopped
+
+  site_service:
+    image: site_service:0.0.1
+    build:
+      context: ./services/site
+      dockerfile: Dockerfile
+    environment:
+      - SERVER_PORT=8080
+    container_name: site_service
+    ports:
+      - "8080:8080"
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4:7
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  auth-db-data:
+  desc-db-data:
+  mock-db-data:
+  notification-db-data:
+  pgadmin-data:
